@@ -1,0 +1,31 @@
+export type ${className} = {
+#foreach ($column in $columns)
+#if(${column.attrType} == 'Integer' || ${column.attrType} == 'Float' || ${column.attrType} == 'Long' || ${column.attrType} == 'Double' || ${column.attrType} == 'BigDecimal')
+  /** ${column.comments} */
+  ${column.attrname}: number;
+#end
+#if(${column.attrType} == 'Boolean')
+  /** ${column.comments} */
+  ${column.attrname}: boolean;
+#end
+#if(${column.attrType} == 'String')
+  /** ${column.comments} */
+  ${column.attrname}: string;
+#end
+#if(${column.attrType} == 'Date')
+  /** ${column.comments} */
+  ${column.attrname}: Date;
+#end
+#end
+};
+
+export type ${className}Pagination = {
+  total: number;
+  pageSize: number;
+  current: number;
+};
+
+export type ${className}ListData = {
+  list: ${className}[];
+  pagination: Partial<${className}Pagination>;
+};

@@ -1,0 +1,106 @@
+<template>
+  <el-dialog :title="!dataForm.id ? '新增' : '修改'" :close-on-click-modal="false" :visible.sync="visible">
+    <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
+#foreach($column in $columns)
+    #if(!($column.columnName == $pk.columnName || $column.columnName == 'gmt_create' || $column.columnName == 'gmt_modified' || $column.columnName == 'is_deleted'))
+    <el-form-item label="${column.comments}" prop="${column.attrname}">
+      <el-input v-model="dataForm.${column.attrname}" placeholder="${column.comments}"></el-input>
+    </el-form-item>
+    #end
+#end
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="visible = false">取消</el-button>
+      <el-button :disabled="saveBtnDisabled" type="primary" @click="dataFormSubmit()">确定</el-button>
+    </span>
+  </el-dialog>
+</template>
+
+<script>
+import ${className}Api from '@/api/${pathName}'
+const defaultDataForm = {
+#foreach($column in $columns)
+#**##if(!($column.columnName == 'gmt_create' || $column.columnName == 'gmt_modified' || $column.columnName == 'is_deleted'))
+    #**#${column.attrname}: '',
+#**##end
+#end
+}
+  export default {
+    data () {
+      return {
+        visible: false,
+        saveBtnDisabled: false,
+        dataForm: defaultDataForm,
+        dataRule: {
+#foreach($column in $columns)
+#**##if($column.columnName == $pk.columnName || $column.columnName == 'gmt_create' || $column.columnName == 'gmt_modified' || $column.columnName == 'is_deleted')
+#**##else
+    #**#${column.attrname}: [{ required: true, message: '${column.comments}不能为空', trigger: 'blur' }],
+#**##end
+#end
+        }
+      }
+    },
+    methods: {
+      init (id) {
+        this.visible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].resetFields()
+          if (id) {
+            ${className}Api.getById(id).then((resp) => {
+              if (resp && resp.code === 20000) {
+                this.dataForm = resp.data.${classname}
+              }
+            })
+          } else {
+                this.dataForm = { ...defaultDataForm }
+            }
+        })
+      },
+      // 表单提交
+      dataFormSubmit () {
+        #[[this.$refs['dataForm'].validate((valid) => {]]#
+          if (valid) {
+            this.saveBtnDisabled = true // 防止表单重复提交
+            if (!this.dataForm.id) {
+                ${className}Api.save(this.dataForm).then((resp) => {
+                    this.saveBtnDisabled = false
+                    if (resp && resp.code === 20000) {
+                        #[[this.$message({]]#
+                                message: resp.message, type: 'success', duration: 1500,
+                                onClose: () => {
+                            this.visible = false
+                            #[[this.$emit('refreshDataList')]]#
+                        }
+                    })
+                    } else {
+                        #[[this.$message({
+                            message: resp.message, type: 'error', duration: 1500
+                        })]]#
+                    }
+                })
+            } else{
+                ${className}Api.updateById(this.dataForm).then((resp) => {
+                    this.saveBtnDisabled = false
+                    if (resp && resp.code === 20000) {
+                        #[[this.$message({]]#
+                                message: resp.message, type: 'success', duration: 1500,
+                                onClose: () => {
+                            this.visible = false
+                            this.saveBtnDisabled = false
+                            #[[this.$emit('refreshDataList')]]#
+                        }
+                    })
+                    } else {
+                        #[[this.$message({
+                            message: resp.message, type: 'error', duration: 1500
+                        })]]#
+                    }
+                })
+            }
+          }
+        })
+      }
+    }
+  }
+</script>

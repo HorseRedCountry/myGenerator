@@ -1,0 +1,48 @@
+package ${package}.${moduleName}.service.impl;
+
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Map;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
+import ${mainPath}.common.result.Query;
+import ${package}.${moduleName}.entity.${className};
+import ${package}.${moduleName}.mapper.${className}Mapper;
+import ${package}.${moduleName}.service.${className}Service;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Service("${classname}Service")
+public class ${className}ServiceImpl extends ServiceImpl<${className}Mapper, ${className}> implements ${className}Service {
+
+    @Override
+    public IPage<${className}> queryPage(Map<String, Object> params) {
+        IPage<${className}> page = this.page(
+                new Query<${className}>().getPage(params),
+                new QueryWrapper<${className}>()
+        );
+
+        return page;
+    }
+
+    @Override
+    public List<${className}> queryList(Map<String, Object> params) {
+        LambdaQueryWrapper<${className}> queryWrapper = new LambdaQueryWrapper<>();
+        // id
+        if (params.get("id") != null) {
+            String id = params.get("id").toString();
+            if (!id.isEmpty()) {
+                queryWrapper.eq(${className}::getId, id);
+            }
+        }
+        List<${className}> entityList = baseMapper.selectList(queryWrapper);
+        return entityList;
+    }
+}

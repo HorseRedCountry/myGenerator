@@ -1,0 +1,53 @@
+import request from '@/utils/request'
+
+const api_name = '/${moduleName}/${pathName}'
+
+export default {
+    getList(query) {
+        // 列表
+        return request({
+            url: `${api_name}/list`,
+            method: 'post',
+            params: query
+        })
+    },
+    getPageList(query) {
+        // 分页
+        return request({
+            url: `${api_name}/page`,
+            method: 'post',
+            params: query
+        })
+    },
+    getById(id) {
+        // 根据Id获取
+        return request({
+            url: `${api_name}/detail/#[[${]]#id}`,
+            method: 'get'
+        })
+    },
+    save(data) {
+        // 新增保存
+        return request({
+            url: `${api_name}/save`,
+            method: 'post',
+            data: data
+        })
+    },
+    updateById(data) {
+        // 根据Id更新
+        return request({
+            url: `${api_name}/update`,
+            method: 'put',
+            data: data
+        })
+    },
+    delete(idList) {
+        // 批量删除
+        return request({
+            url: `${api_name}/delete`,
+            method: 'delete',
+            data: idList
+        })
+    }
+}

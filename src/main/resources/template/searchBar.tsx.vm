@@ -1,0 +1,72 @@
+import { Button, Space, Input } from 'antd';
+import { useState } from 'react';
+import { useStores } from '../../../../store/index';
+interface Props {
+    reset: () => void;
+    search: () => void;
+}
+export default (props: Props) => {
+    const { visitorManageStore } = useStores();
+    const [name, setName] = useState(visitorManageStore.getVisitorParameter.name);
+    const [number, setNumber] = useState(visitorManageStore.getVisitorParameter.number);
+    const [telephone, setTelephone] = useState(visitorManageStore.getVisitorParameter.telephone);
+
+    return (
+        <Space direction="horizontal" size="large">
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ alignSelf: 'center' }}>姓名：</div>
+                <div>
+                    <Input
+                        defaultValue={visitorManageStore.getVisitorParameter.name}
+                        onChange={(value) => {
+                            visitorManageStore.getVisitorParameter.name = value.target.value;
+                            setName(value.target.value);
+                        }}
+                        value={name}
+                    />
+                </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ alignSelf: 'center' }}>访客单号：</div>
+                <div>
+                    <Input
+                        defaultValue={visitorManageStore.getVisitorParameter.number}
+                        onChange={(value) => {
+                            visitorManageStore.getVisitorParameter.number = value.target.value;
+                            setNumber(value.target.value);
+                        }}
+                        value={number}
+                    />
+                </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <div style={{ alignSelf: 'center' }}>手机号码：</div>
+                <div>
+                    <Input
+                        defaultValue={visitorManageStore.getVisitorParameter.telephone}
+                        onChange={(value) => {
+                            visitorManageStore.getVisitorParameter.telephone = value.target.value;
+                            setTelephone(value.target.value);
+                        }}
+                        value={telephone}
+                    />
+                </div>
+            </div>
+            <Button
+                type="default"
+                onClick={(value) => {
+                    setName('');
+                    setNumber('');
+                    props.reset();
+                }}
+            >
+                重置
+            </Button>
+            <Button type="primary" onClick={props.search}>
+                查询
+            </Button>
+        </Space>
+    );
+};

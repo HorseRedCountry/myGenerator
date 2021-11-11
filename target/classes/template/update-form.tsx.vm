@@ -1,0 +1,46 @@
+import React from 'react';
+import { Col, Row } from 'antd';
+import ProForm, { ModalForm, ProFormDateRangePicker, ProFormDependency, ProFormDigit, ProFormRadio, ProFormSelect, ProFormText, ProFormTextArea, } from '@ant-design/pro-form';
+import type { ${className} } from '../data';
+
+export type FormValueType = {
+  target?: string;
+  template?: string;
+  type?: string;
+  time?: string;
+  frequency?: string;
+} & Partial<${className}>;
+
+export type UpdateFormProps = {
+  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
+  onSubmit: (values: FormValueType) => Promise<void>;
+  updateModalVisible: boolean;
+  values: Partial<${className}>;
+};
+
+const UpdateForm: React.FC<UpdateFormProps> = (props) => {
+  return (
+    <ModalForm
+      title="新建"
+      visible={props.updateModalVisible}
+      initialValues={props.values}
+      onFinish={props.onSubmit}
+      modalProps={{
+        onCancel:() => {props.onCancel();}
+      }}
+    >
+    <Row gutter={16}>
+#set($columnList=',id,is_deleted,gmt_create,gmt_modified,')
+#foreach($column in $columns)
+#if(${columnList.indexOf($column.columnName)} == -1)
+  <Col xl={{ span: 6, offset: 2 }} lg={{ span: 8 }} md={{ span: 12 }} sm={24}>
+<ProFormText width="md" label="${column.comments}" name="${column.attrname}" rules={[ { required: true, message: '请输入${column.comments}', }, ]} />
+  </Col>
+#end
+#end
+    </Row>
+    </ModalForm>
+    );
+};
+
+export default UpdateForm;

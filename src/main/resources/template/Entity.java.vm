@@ -1,0 +1,42 @@
+package ${package}.${moduleName}.entity;
+
+import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModelProperty;
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+import java.io.Serializable;
+import java.util.Date;
+import lombok.Data;
+
+/**
+ * ${comments}
+ * 
+ * @author ${author}
+ * @since ${datetime}
+ */
+@Data
+@TableName("${tableName}")
+public class ${className} implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+
+	@ApiModelProperty(value = "$column.comments")
+#**##if($column.columnName == $pk.columnName)
+	@TableId(value = "id", type = IdType.AUTO)
+#**##end
+#**##if($column.attrname == "isDeleted")
+	@TableLogic
+#**##end
+#**##if($column.attrname == "gmtCreate")
+	@TableField(fill = FieldFill.INSERT)
+#**##end
+#**##if($column.attrname == "gmtModified")
+	@TableField(fill = FieldFill.INSERT_UPDATE)
+#**##end
+	private $column.attrType $column.attrname;
+#end
+
+}

@@ -1,0 +1,114 @@
+<template>
+  <div class="app-container">
+    <el-form :inline="true" :model="listQuery" @keyup.enter.native="getDataList()">
+      <el-form-item>
+        <el-input v-model="listQuery.key" placeholder="参数名" clearable></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="getDataList()">查询</el-button>
+        <el-button type="primary" @click="handleEdit()">新增</el-button>
+        <el-button type="danger" @click="handleDelete()" :disabled="selectedDataList.length <= 0">批量删除</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table :data="dataList"  border  v-loading="dataListLoading"  @selection-change="handleSelectionChange"  style="width: 100%;">
+      <el-table-column  type="selection" header-align="center" align="center" width="50">
+      </el-table-column>
+      #foreach($column in $columns)
+        #if(!($column.columnName == 'gmt_create' || $column.columnName == 'gmt_modified' || $column.columnName == 'is_deleted'))
+        <el-table-column prop="${column.attrname}" header-align="center" align="center" label="${column.comments}">
+        </el-table-column>
+        #end
+      #end
+      <el-table-column fixed="right" header-align="center" align="center" width="150" label="操作">
+        <template slot-scope="scope">
+          <el-button type="text" size="mini" @click="handleEdit(scope.row.${pk.attrname})">修改</el-button>
+          <el-button type="text" size="mini" @click="handleDelete(scope.row.${pk.attrname})">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 分页组件 -->
+    <pagination v-show="total>0" :total="total" :page.sync="page" :limit.sync="limit" @pagination="getDataList" />
+
+    <!-- 弹窗, 新增 / 修改 -->
+    <edit-form v-if="editFormVisible" ref="editForm" @refreshDataList="getDataList"></edit-form>
+  </div>
+</template>
+
+<script>
+ import ${className}Api from '@/api/${pathName}'
+ import EditForm from './edit-form'
+ import Pagination from '@/components/Pagination'
+ export default {
+  data () {
+    return {
+      page: 1, // 页码
+      limit: 20, // 每页记录数
+      listQuery: {
+        key: '',
+        order_field: 'id',
+        order_way: 'desc'
+      }, // 查询表单
+      total: 0, // 总数
+      dataList: [],
+      dataListLoading: false,
+      selectedDataList: [],
+      editFormVisible: false
+    }
+  },
+  components: {
+    EditForm,
+    Pagination
+  },
+  created () {
+    this.getDataList()
+  },
+  methods: {
+    getDataList () {
+      // 获取数据列表
+      this.dataListLoading = true
+        ${className}Api.getPageList(this.page, this.limit, this.listQuery).then(response => {
+        this.dataList = response.data.list
+        this.total = response.data.total
+        this.dataListLoading = false
+      })
+    },
+    handleSelectionChange (val) {
+      // 多选
+      this.selectedDataList = val
+    },
+    handleEdit (id) {
+      // 新增 / 修改
+      this.editFormVisible = true
+      #[[this.$nextTick(() => {]]#
+        this.$refs.editForm.init(id)
+      })
+    },
+    handleDelete (id) {
+      // 删除
+      var idList = id ? [id] : this.selectedDataList.map(item => {
+        return item.${pk.attrname}
+      })
+      #[[this.$confirm(`确定对[id=${idList.join(',')}]进行[${id ? '删除' : '批量删除'}]操作?`, '提示', {]]#
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+    }).then(() => {
+        ${className}Api.delete(idList).then(data => {
+          if (data && data.code === 20000) {
+            #[[this.$message({]]#
+                    message: data.message, type: 'success', duration: 1500,
+                    onClose: () => {
+              this.getDataList()
+            }
+          })
+          } else {
+            #[[this.$message({]]#
+                    message: data.message, type: 'error', duration: 1500
+            })
+          }
+        })
+      })
+    }
+  }
+ }
+</script>
