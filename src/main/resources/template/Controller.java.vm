@@ -52,7 +52,7 @@ public class ${className}Controller {
     }
 
     @ApiOperation(value = "详情")
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public Result detail(@PathVariable Integer id) {
         ${className} ${classname} = ${classname}Service.getById(id);
         return Result.success(${classname});
@@ -74,6 +74,7 @@ public class ${className}Controller {
     }
 
     @ApiOperation(value = "删除")
+    @DeleteMapping(value = "/delete/ids")
     public Result delete(@PathVariable String ids) {
         boolean status = ${classname}Service.removeByIds(Arrays.asList(ids.split(",")));
         return Result.judge(status);
