@@ -1,7 +1,7 @@
 package ${package}.${moduleName}.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 #if(${hasBigDecimal})
 import java.math.BigDecimal;
@@ -23,7 +23,7 @@ public class ${className} implements Serializable {
 
 #foreach ($column in $columns)
 
-	@ApiModelProperty(value = "$column.comments")
+	@Schema(description = "$column.comments")
 #**##if($column.columnName == $pk.columnName)
 	@TableId(value = "id", type = IdType.AUTO)
 #**##end

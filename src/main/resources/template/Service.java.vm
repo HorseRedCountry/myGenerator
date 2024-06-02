@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface ${className}Service extends IService<${className}> {
 
-    IPage<${className}> queryPage(Map<String, Object> params);
+##    IPage<${className}> queryPage(Map<String, Object> params);
 
     List<${className}> queryList(Map<String, Object> params);
 

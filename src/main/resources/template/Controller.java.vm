@@ -1,16 +1,18 @@
 package ${package}.${moduleName}.controller;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import ${mainPath}.common.result.Result;
-import ${mainPath}.common.result.ResultCode;
+import ${mainPath}.${moduleName}.common.Result;
+import ${mainPath}.${moduleName}.common.ResultCode;
 import ${package}.${moduleName}.entity.${className};
 import ${package}.${moduleName}.service.${className}Service;
 
@@ -20,45 +22,44 @@ import ${package}.${moduleName}.service.${className}Service;
  * @author ${author}
  * @since ${datetime}
  */
-@Api(tags = "${comments}接口")
+@Tag(name = "${comments}接口")
 @RestController
-@RequestMapping("/tonsail/${moduleName}/${pathName}")
+@RequestMapping("${moduleName}/${pathName}")
 @RequiredArgsConstructor
 public class ${className}Controller {
 
     private final ${className}Service ${classname}Service;
 
-    @ApiOperation(value = "分页列表")
-    @PostMapping("/page")
-    public Result page(@RequestBody Map<String, Object> params) {
-        try {
-            IPage<${className}> result = ${classname}Service.queryPage(params);
-            return Result.success(result.getRecords(), result.getTotal());
-        } catch (Exception e) {
-            return Result.failed(ResultCode.USER_PARAMS_ERROR);
-        }
-    }
+    ##    @Operation(value = "分页列表")
+    ##    @PostMapping("/page")
+    ##    public Result page(@RequestBody Map<String, Object> params) {
+    ##        try {
+    ##            IPage<${className}> result = ${classname}Service.queryPage(params);
+    ##            return Result.success(result.getRecords(), result.getTotal());
+    ##        } catch (Exception e) {
+    ##            return Result.failed(ResultCode.FAIL);
+    ##        }
+    ##    }
 
-
-    @ApiOperation(value = "条件列表")
+    @Operation(summary = "条件列表")
     @PostMapping("/list")
-    public Result list(@RequestBody Map<String, Object> params){
+    public Result list(@RequestBody Map<String, Object> params) {
         try {
             List<${className}> list = ${classname}Service.queryList(params);
             return Result.success(list);
         } catch (Exception e) {
-            return Result.failed(ResultCode.USER_PARAMS_ERROR);
+            return Result.failed(ResultCode.FAIL);
         }
     }
 
-    @ApiOperation(value = "详情")
+    @Operation(summary = "详情")
     @GetMapping("/detail/{id}")
     public Result detail(@PathVariable Integer id) {
-        ${className} ${classname} = ${classname}Service.getById(id);
+        ${className} ${classname} =${classname}Service.getById(id);
         return Result.success(${classname});
     }
 
-    @ApiOperation(value = "新增")
+    @Operation(summary = "新增")
     @PostMapping("/save")
     public Result save(@RequestBody ${className} ${classname}) {
         boolean status = ${classname}Service.save(${classname});
@@ -66,17 +67,17 @@ public class ${className}Controller {
     }
 
 
-    @ApiOperation(value = "修改")
+    @Operation(summary = "修改")
     @PutMapping(value = "/update")
     public Result update(@RequestBody ${className} ${classname}) {
         boolean status = ${classname}Service.updateById(${classname});
         return Result.judge(status);
     }
 
-    @ApiOperation(value = "删除")
+    @Operation(summary = "删除")
     @DeleteMapping(value = "/delete/ids")
     public Result delete(@PathVariable String ids) {
-        boolean status = ${classname}Service.removeByIds(Arrays.asList(ids.split(",")));
+        boolean status = ${classname}Service.removeByIds(Collections.singletonList(ids.split(",")));
         return Result.judge(status);
     }
 
