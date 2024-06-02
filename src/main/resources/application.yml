@@ -10,12 +10,12 @@ spring:
 #    url: jdbc:mysql://rm-uf6110juzi9cn5l4pxo.mysql.rds.aliyuncs.com:3306/ts_ehr_dev?serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
 #    username: ehr_dev
 #    password: WiG8A0hgdA
-    url: jdbc:mysql://rm-uf6110juzi9cn5l4pxo.mysql.rds.aliyuncs.com:3306/ts_dms_dev?serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
-    username: tonsail_dev
-    password: qu9ylUXJqO
-#    url: jdbc:mysql://192.168.17.57:3306/dms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-#    username: root
-#    password: 123456
+#    url: jdbc:mysql://rm-uf6110juzi9cn5l4pxo.mysql.rds.aliyuncs.com:3306/ts_dms_dev?serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+#    username: tonsail_dev
+#    password: qu9ylUXJqO
+    url: jdbc:mysql://127.0.0.1:3306/campus_forum?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1234
 
     #oracle配置
     #    driverClassName: oracle.jdbc.OracleDriver
