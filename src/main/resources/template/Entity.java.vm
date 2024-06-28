@@ -27,7 +27,7 @@ public class ${className} implements Serializable {
 #**##if($column.columnName == $pk.columnName)
 	@TableId(value = "id", type = IdType.AUTO)
 #**##end
-#**##if($column.attrname == "isDeleted")
+#**##if($column.attrname == "deleted")
 	@TableLogic
 #**##end
 #**##if($column.attrname == "gmtCreate")
